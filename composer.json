@@ -1,6 +1,6 @@
 {
-  "name": "intelligentspark/isotope_purchaseorder",
-  "description": "Payment method \"Purchase Order\" accepts a PO# as guarantee of payment.",
+  "name": "intelligentspark/isotope_shippingmethodextended",
+  "description": "Extended Checkout Step 'Shipping Method' to include a hook for handling additional shipping user input.",
   "keywords": [
     "contao",
     "isotope",
