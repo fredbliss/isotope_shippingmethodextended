@@ -132,7 +132,7 @@ class ShippingMethodExtended extends ShippingMethod
         $objTemplate->headline        = $GLOBALS['TL_LANG']['MSC']['shipping_method'];
         $objTemplate->message         = $GLOBALS['TL_LANG']['MSC']['shipping_method_message'];
         $objTemplate->options         = $objWidget->parse();
-        $objTemplate->upgrades        = $this->renderUpgradeOptions();
+        $objTemplate->upgrades        = $this->renderUpgradeOptions($objModule);
         $objTemplate->shippingMethods = $this->modules;
 
         return $objTemplate->parse($objModule);
@@ -147,6 +147,8 @@ class ShippingMethodExtended extends ShippingMethod
                 return $objCallback->{$callback[1]}($this,$objModule);
             }
         }
+
+        return '';
     }
     /**
      * Initialize modules and options
