@@ -132,23 +132,28 @@ class ShippingMethodExtended extends ShippingMethod
         $objTemplate->headline        = $GLOBALS['TL_LANG']['MSC']['shipping_method'];
         $objTemplate->message         = $GLOBALS['TL_LANG']['MSC']['shipping_method_message'];
         $objTemplate->options         = $objWidget->parse();
-        $objTemplate->upgrades        = $this->renderUpgradeOptions($objModule);
+        $objTemplate->upgrades        = $this->getShippingUpgrades($this->modules);
         $objTemplate->shippingMethods = $this->modules;
 
         return $objTemplate->parse($objModule);
     }
 
-    protected function renderUpgradeOptions($objModule) {
+    /**
+     * @param $arrModules
+     * @return array
+     *
+     */
+    protected function getShippingUpgrades($arrModules) {
         // !HOOK: shipping method label.  Allows us to append additional form controls for shipping upgrades.
-        if (isset($GLOBALS['ISO_HOOKS']['renderUpgradeOptions']) && is_array($GLOBALS['ISO_HOOKS']['renderUpgradeOptions'])) {
-            foreach ($GLOBALS['ISO_HOOKS']['renderUpgradeOptions'] as $callback) {
+        if (isset($GLOBALS['ISO_HOOKS']['getShippingUpgrades']) && is_array($GLOBALS['ISO_HOOKS']['getShippingUpgrades'])) {
+            foreach ($GLOBALS['ISO_HOOKS']['getShippingUpgrades'] as $callback) {
                 $objCallback = \System::importStatic($callback[0]);
 
-                return $objCallback->{$callback[1]}($this,$objModule);
+                return $objCallback->{$callback[1]}($this,$arrModules);
             }
         }
 
-        return '';
+        return array();
     }
     /**
      * Initialize modules and options
