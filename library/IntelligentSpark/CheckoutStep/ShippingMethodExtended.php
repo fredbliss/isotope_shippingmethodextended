@@ -128,15 +128,26 @@ class ShippingMethodExtended extends ShippingMethod
         }
 
         /** @var Template|\stdClass $objTemplate */
-        $objTemplate                  = new Template('iso_checkout_shipping_method');
+        $objTemplate                  = new Template('iso_checkout_shipping_method_extended');
         $objTemplate->headline        = $GLOBALS['TL_LANG']['MSC']['shipping_method'];
         $objTemplate->message         = $GLOBALS['TL_LANG']['MSC']['shipping_method_message'];
         $objTemplate->options         = $objWidget->parse();
+        $objTemplate->upgrades        = $this->renderUpgradeOptions();
         $objTemplate->shippingMethods = $this->modules;
 
-        return $objTemplate->parse();
+        return $objTemplate->parse($objModule);
     }
 
+    protected function renderUpgradeOptions($objModule) {
+        // !HOOK: shipping method label.  Allows us to append additional form controls for shipping upgrades.
+        if (isset($GLOBALS['ISO_HOOKS']['appendShippingLabel']) && is_array($GLOBALS['ISO_HOOKS']['appendShippingLabel'])) {
+            foreach ($GLOBALS['ISO_HOOKS']['appendShippingLabel'] as $callback) {
+                $objCallback = \System::importStatic($callback[0]);
+
+                return $objCallback->{$callback[1]}($this,$objModule);
+            }
+        }
+    }
     /**
      * Initialize modules and options
      */
@@ -183,15 +194,6 @@ class ShippingMethodExtended extends ShippingMethod
 
                     if ($objModule->note != '') {
                         $strLabel .= '<span class="note">' . $objModule->note . '</span>';
-                    }
-
-                    // !HOOK: shipping method label.  Allows us to append additional form controls for shipping upgrades.
-                    if (isset($GLOBALS['ISO_HOOKS']['appendShippingLabel']) && is_array($GLOBALS['ISO_HOOKS']['appendShippingLabel'])) {
-                        foreach ($GLOBALS['ISO_HOOKS']['appendShippingLabel'] as $callback) {
-                            $objCallback = \System::importStatic($callback[0]);
-
-                            $strLabel .= $objCallback->{$callback[1]}($this,$objModule);
-                        }
                     }
 
                     $this->options[] = array(

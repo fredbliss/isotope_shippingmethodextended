@@ -1,0 +1,9 @@
+<h2><?php echo $this->headline; ?></h2>
+<p><?php echo $this->message; ?></p>
+
+<?php echo $this->options; ?>
+<?php if($this->upgrades): ?>
+<div class="shipping-upgrades">
+<?= $this->upgrades; ?>
+</div>
+<?php endif; ?>

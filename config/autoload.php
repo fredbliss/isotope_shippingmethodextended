@@ -16,3 +16,12 @@ if (class_exists('NamespaceClassLoader')) {
      */
     NamespaceClassLoader::add('IntelligentSpark', 'system/modules/isotope_shippingmethodextended/library');
 }
+
+
+/**
+ * Register the templates
+ */
+TemplateLoader::addFiles(array
+(
+    'iso_checkout_shipping_method_extended'     => 'system/modules/isotope_shippingmethodextended/templates/checkout'
+));
