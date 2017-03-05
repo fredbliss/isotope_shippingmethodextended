@@ -33,7 +33,7 @@
   "extra": {
     "contao": {
       "sources": {
-        "": "system/modules/isotope_shippingmethodextended"
+        "system/modules/isotope_shippingmethodextended": "system/modules/isotope_shippingmethodextended"
       }
     }
   },
