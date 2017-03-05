@@ -117,6 +117,8 @@ class ShippingMethodExtended extends ShippingMethod
             if (isset($GLOBALS['ISO_HOOKS']['shippingMethodSubmit']) && is_array($GLOBALS['ISO_HOOKS']['shippingMethodSubmit'])) {
                 foreach ($GLOBALS['ISO_HOOKS']['shippingMethodSubmit'] as $callback) {
                     $objCallback = \System::importStatic($callback[0]);
+
+                    $objCallback->{$callback[1]}($this);
                 }
             }
         }
@@ -133,6 +135,74 @@ class ShippingMethodExtended extends ShippingMethod
         $objTemplate->shippingMethods = $this->modules;
 
         return $objTemplate->parse();
+    }
+
+    /**
+     * Initialize modules and options
+     */
+    private function initializeModules()
+    {
+        if (null !== $this->modules && null !== $this->options) {
+            return;
+        }
+
+        $this->modules = array();
+        $this->options = array();
+
+        $arrIds = deserialize($this->objModule->iso_shipping_modules);
+
+        if (!empty($arrIds) && is_array($arrIds)) {
+            $arrColumns = array('id IN (' . implode(',', $arrIds) . ')');
+
+            if (true !== BE_USER_LOGGED_IN) {
+                $arrColumns[] = "enabled='1'";
+            }
+
+            /** @var Shipping[] $objModules */
+            $objModules = Shipping::findBy(
+                $arrColumns, null, array('order' => \Database::getInstance()->findInSet('id', $arrIds))
+            );
+
+            if (null !== $objModules) {
+                foreach ($objModules as $objModule) {
+
+                    if (!$objModule->isAvailable()) {
+                        continue;
+                    }
+
+                    $strLabel = $objModule->getLabel();
+                    $fltPrice = $objModule->getPrice();
+
+                    if ($fltPrice != 0) {
+                        if ($objModule->isPercentage()) {
+                            $strLabel .= ' (' . $objModule->getPercentageLabel() . ')';
+                        }
+
+                        $strLabel .= ': ' . Isotope::formatPriceWithCurrency($fltPrice);
+                    }
+
+                    if ($objModule->note != '') {
+                        $strLabel .= '<span class="note">' . $objModule->note . '</span>';
+                    }
+
+                    // !HOOK: shipping method label.  Allows us to append additional form controls for shipping upgrades.
+                    if (isset($GLOBALS['ISO_HOOKS']['appendShippingLabel']) && is_array($GLOBALS['ISO_HOOKS']['appendShippingLabel'])) {
+                        foreach ($GLOBALS['ISO_HOOKS']['appendShippingLabel'] as $callback) {
+                            $objCallback = \System::importStatic($callback[0]);
+
+                            $strLabel .= $objCallback->{$callback[1]}($this,$objModule);
+                        }
+                    }
+
+                    $this->options[] = array(
+                        'value' => $objModule->id,
+                        'label' => $strLabel,
+                    );
+
+                    $this->modules[$objModule->id] = $objModule;
+                }
+            }
+        }
     }
 
 
