@@ -140,8 +140,8 @@ class ShippingMethodExtended extends ShippingMethod
 
     protected function renderUpgradeOptions($objModule) {
         // !HOOK: shipping method label.  Allows us to append additional form controls for shipping upgrades.
-        if (isset($GLOBALS['ISO_HOOKS']['appendShippingLabel']) && is_array($GLOBALS['ISO_HOOKS']['appendShippingLabel'])) {
-            foreach ($GLOBALS['ISO_HOOKS']['appendShippingLabel'] as $callback) {
+        if (isset($GLOBALS['ISO_HOOKS']['renderUpgradeOptions']) && is_array($GLOBALS['ISO_HOOKS']['renderUpgradeOptions'])) {
+            foreach ($GLOBALS['ISO_HOOKS']['renderUpgradeOptions'] as $callback) {
                 $objCallback = \System::importStatic($callback[0]);
 
                 return $objCallback->{$callback[1]}($this,$objModule);
