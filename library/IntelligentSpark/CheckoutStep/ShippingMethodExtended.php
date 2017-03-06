@@ -129,7 +129,7 @@ class ShippingMethodExtended extends ShippingMethod
         $objTemplate->headline        = $GLOBALS['TL_LANG']['MSC']['shipping_method'];
         $objTemplate->message         = $GLOBALS['TL_LANG']['MSC']['shipping_method_message'];
         $objTemplate->options         = $objWidget->parse();
-        $objTemplate->upgrades        = $this->getShippingUpgrades($this->modules);
+        $objTemplate->upgrades        = $this->getShippingUpgrades($objModule->id);
         $objTemplate->shippingMethods = $this->modules;
 
         return $objTemplate->parse($objModule);
@@ -140,13 +140,13 @@ class ShippingMethodExtended extends ShippingMethod
      * @return array
      *
      */
-    protected function getShippingUpgrades($arrModules) {
+    protected function getShippingUpgrades($intModuleId) {
         // !HOOK: shipping method label.  Allows us to append additional form controls for shipping upgrades.
         if (isset($GLOBALS['ISO_HOOKS']['getShippingUpgrades']) && is_array($GLOBALS['ISO_HOOKS']['getShippingUpgrades'])) {
             foreach ($GLOBALS['ISO_HOOKS']['getShippingUpgrades'] as $callback) {
                 $objCallback = \System::importStatic($callback[0]);
 
-                return $objCallback->{$callback[1]}($this,$arrModules);
+                return $objCallback->{$callback[1]}($this,$intModuleId);
             }
         }
 
