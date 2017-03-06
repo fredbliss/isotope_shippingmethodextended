@@ -146,7 +146,7 @@ class ShippingMethodExtended extends ShippingMethod
             foreach ($GLOBALS['ISO_HOOKS']['getShippingUpgrades'] as $callback) {
                 $objCallback = \System::importStatic($callback[0]);
 
-                return $objCallback->{$callback[1]}($this,$intModuleId);
+                return $objCallback->{$callback[1]}($this->modules,$intModuleId);
             }
         }
 

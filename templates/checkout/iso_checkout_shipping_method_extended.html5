@@ -4,6 +4,8 @@
 <?php echo $this->options; ?>
 <?php if($this->upgrades): ?>
 <div class="shipping-upgrades">
-<?= $this->upgrades; ?>
+<?php foreach($this->upgrades as $upgrade): ?>
+<?= $upgrade; ?>
+<?php endforeach; ?>
 </div>
 <?php endif; ?>
