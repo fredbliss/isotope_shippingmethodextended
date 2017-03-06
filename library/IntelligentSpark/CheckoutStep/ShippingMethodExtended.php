@@ -11,11 +11,8 @@
 
 namespace IntelligentSpark\CheckoutStep;
 
-use Isotope\Interfaces\IsotopeCheckoutStep;
-use Isotope\Interfaces\IsotopeProductCollection;
 use Isotope\Isotope;
 use Isotope\Model\Shipping;
-use Isotope\Module\Checkout;
 use Isotope\CheckoutStep\ShippingMethod;
 use Isotope\Template;
 
@@ -155,6 +152,7 @@ class ShippingMethodExtended extends ShippingMethod
 
         return array();
     }
+
     /**
      * Initialize modules and options
      */
